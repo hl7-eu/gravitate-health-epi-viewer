@@ -1,0 +1,202 @@
+{% assign compositionResource = json.entry | where: "resource.resourceType", "Composition" | first %}
+{% assign composition = compositionResource.resource %}
+
+<style>
+  body {
+    background: #f9fafb;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #1f2937;
+  }
+
+  .container.mt-2 {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    border-radius: 0;
+    margin-top: 0.5rem !important;
+  }
+
+  .container.mt-2 .btn {
+    background: #ffffff;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: none;
+  }
+
+  .container.mt-2 .btn:hover,
+  .container.mt-2 .btn:focus {
+    background: #f0fdf4;
+    color: #15803d;
+    border-color: #16a34a;
+  }
+
+  .container.mt-2 .dropdown-menu {
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+  }
+
+  .container.mt-2 .dropdown-item {
+    color: #1f2937;
+  }
+
+  .container.mt-2 .dropdown-item:hover,
+  .container.mt-2 .dropdown-item:focus {
+    background: #f0fdf4;
+    color: #15803d;
+  }
+
+  .product-header {
+    background: #16a34a;
+    color: #ffffff;
+    padding: 24px 28px;
+    border-radius: 12px;
+    margin: 20px 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .product-header .product-icon {
+    font-size: 28px;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+
+  .product-header .product-name {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .product-header .product-subtitle {
+    font-size: 14px;
+    margin: 4px 0 0 0;
+    opacity: 0.9;
+    font-weight: 400;
+  }
+
+  .accordion-item {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .accordion-item.open {
+    border-color: #bbf7d0;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.12);
+  }
+
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    background: #ffffff;
+    transition: background 0.2s ease;
+  }
+
+  .accordion-item.open .accordion-header {
+    background: #f0fdf4;
+  }
+
+  .section-pill {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 14px;
+    white-space: nowrap;
+  }
+
+  .accordion-item.open .section-pill {
+    background: #16a34a;
+    color: #ffffff;
+  }
+
+  .section-title {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1f2937;
+  }
+
+  .chevron {
+    width: 18px;
+    height: 18px;
+    color: #6b7280;
+    margin-left: 12px;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .accordion-item.open .chevron {
+    color: #16a34a;
+    transform: rotate(180deg);
+  }
+
+  .accordion-body {
+    display: none;
+    padding: 8px 20px 20px 20px;
+    font-size: 14px;
+    line-height: 1.75;
+    color: #374151;
+    background: #ffffff;
+  }
+
+  .accordion-item.open .accordion-body {
+    display: block;
+  }
+</style>
+
+<div class="product-header">
+  <span class="product-icon" aria-hidden="true">💊</span>
+  <span class="product-name">{{ composition.title }}</span>
+  <p class="product-subtitle">Electronic Product Information</p>
+</div>
+
+<div class="accordion">
+  {% for sec in composition.section %}
+    {% if sec.section %}
+      {% for sec2 in sec.section %}
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="this.parentElement.classList.toggle('open')">
+            <span class="section-pill">{{ sec2.title }}</span>
+            <svg class="chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="accordion-body">
+            {{ sec2.text.div }}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="section-pill">{{ sec.title }}</span>
+          <svg class="chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="accordion-body">
+          {{ sec.text.div }}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
